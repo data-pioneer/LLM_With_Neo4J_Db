@@ -1,13 +1,13 @@
 # login into Neo4j Db 
 
-# Create Virtual environment 
+## Create Virtual environment 
 conda create -n langhainVenv python=3.10 -y
 
 conda activate langhainVenv
 
 pip install -r requirements.txt 
 
-# Store Wikipedia page as Nodes and Relationship inside Neo4j DB 
+## Store Wikipedia page as Nodes and Relationship inside Neo4j DB 
 - app.py : User interface for initalize another variables and communaite with user. 
 - Configuration.py : It loads the environment variables. 
 - database.py : Initilize neo4j database driver and made connection. 
@@ -16,7 +16,7 @@ pip install -r requirements.txt
 - LLMTransformer : This class will convert user entered wikipedia page in graph format, which futher store into Neo4j Db. 
 - WikipediaHandler.py : This class fetch data from Wikipedia page and then split into document. 
 
-# Store user selected PDF file into Neo4j DB 
+## Store user selected PDF file into Neo4j DB 
 - app.py : streamlit interface for user connectivity and calling subclasses. 
 - chat_manager : it stores session and message history. 
 - config.py : read all environment variables. 
