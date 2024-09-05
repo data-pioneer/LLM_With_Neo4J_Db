@@ -1,4 +1,13 @@
-# login into Neo4j Db 
+This project integrates the Neo4j graph database to efficiently manage and store relational data, particularly focusing on storing and retrieving document contents and chat histories. Neo4j's powerful graph-based data structure allows for intuitive relationships between entities, making it ideal for use cases such as recommendation systems, question-answering pipelines, and context-aware conversational agents.
+
+## Key Features:
+
+- Document Storage: Store and retrieve PDF contents as nodes in the graph, enabling rich querying capabilities.
+- Chat History Management: Persist chat sessions and their message histories, allowing for easy retrieval and analysis of past interactions.
+- Graph-Based Relationships: Leverage Neo4j's graph model to manage complex relationships between documents, sessions, and user interactions.
+- To get started, ensure that you have the Neo4j Python driver
+
+## login into Neo4j Db 
 
 ## Create Virtual environment 
 conda create -n langhainVenv python=3.10 -y
