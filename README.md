@@ -8,6 +8,8 @@ This project integrates the Neo4j graph database to efficiently manage and store
 - To get started, ensure that you have the Neo4j Python driver
 
 ## login into Neo4j Db 
+- Create new instance
+
 
 ## Create Virtual environment 
 conda create -n langhainVenv python=3.10 -y
