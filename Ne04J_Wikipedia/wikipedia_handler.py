@@ -1,5 +1,5 @@
 # wikipedia_handler.py
-from langchain.document_loaders import WikipediaLoader
+from langchain_community.document_loaders import WikipediaLoader
 from langchain.text_splitter import TokenTextSplitter
 from langchain.docstore.document import Document
 
