@@ -29,9 +29,8 @@ pip install -r requirements.txt
 - LLMTransformer : This class will convert user entered wikipedia page in graph format, which futher store into Neo4j Db. 
 - WikipediaHandler.py : This class fetch data from Wikipedia page and then split into document.
   
-![Screenshot 2024-09-04 120609](https://github.com/user-attachments/assets/414caa50-65e8-455d-9ebe-365f2931ecf4)
+![Screenshot 2024-09-21 235734](https://github.com/user-attachments/assets/003d1955-2b11-42ae-abe1-aee2ef774849)
 
-![Screenshot 2024-09-05 115417](https://github.com/user-attachments/assets/af78b04d-32ab-483e-ae13-f610f3d9a1c5)
 
 ## Store user selected PDF file into Neo4j DB 
 - app.py : streamlit interface for user connectivity and calling subclasses. 
