@@ -24,7 +24,7 @@ class DataRetriever:
         )
         
         print(f"Search query: {query}")
-        structured_data = structured_retriever(self, query)
+        structured_data = self.structured_retriever(query)
         unstructured_data = [el.page_content for el in vector_index.similarity_search(query)]
         final_data = f"""Structured data:
         {structured_data}
@@ -32,58 +32,84 @@ class DataRetriever:
         {"#Document ". join(unstructured_data)}
         """
         return final_data
-    
 
-    # Fulltext index query
-def structured_retriever(self, question: str) -> str:
+    # Full-text index query
+    def structured_retriever(self, question: str) -> str:
+        # Ensure the full-text index exists before running queries
+        self.ensure_fulltext_index()
+
         # Extract entities from text
-    class Entities(BaseModel):
-        """Identifying information about entities."""
+        class Entities(BaseModel):
+            """Identifying information about entities."""
+            names: List[str] = Field(
+                ...,
+                description="All the required entities that appear in the text",
+            )
 
-        names: List[str] = Field(
-            ...,
-            description="All the person, organization, or business entities that "
-            "appear in the text",
+        result = ""
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    "You are extracting organization and person entities from the text.",
+                ),
+                (
+                    "human",
+                    "Use the given format to extract information from the following input: {question}",
+                ),
+            ]
         )
+        entity_chain = prompt | self.llm_transformer.llm.with_structured_output(Entities)
+        entities = entity_chain.invoke({"question": question})
 
-    result = ""
-    prompt = ChatPromptTemplate.from_messages(
-    [
-        (
-            "system",
-            "You are extracting organization and person entities from the text.",
-        ),
-        (
-            "human",
-            "Use the given format to extract information from the following "
-            "input: {question}",
-        ),
-    ]
-    )
-    entity_chain = prompt | self.llm_transformer.llm.with_structured_output(Entities)
-    entities = entity_chain.invoke({"question": question})
+        for entity in entities.names:
+            try:
+                response = self.graph.query(
+                    """
+                    CALL db.index.fulltext.queryNodes('entity', $query, {limit: 2})
+                    YIELD node, score
+                    CALL {
+                      WITH node
+                      MATCH (node)-[r]->(neighbor)
+                      RETURN node.id + ' - ' + type(r) + ' -> ' + neighbor.id AS output
+                      UNION ALL
+                      WITH node
+                      MATCH (node)<-[r]-(neighbor)
+                      RETURN neighbor.id + ' - ' + type(r) + ' -> ' + node.id AS output
+                    }
+                    RETURN output LIMIT 50
+                    """,
+                    {"query": generate_full_text_query(entity)},
+                )
+                result += "\n".join([el['output'] for el in response])
+            except:
+                print(f"Query error:")
 
-    for entity in entities.names:
-        response = self.graph.query(
-            """CALL db.index.fulltext.queryNodes('entity', $query, {limit:2})
-            YIELD node,score
-            CALL {
-              WITH node
-              MATCH (node)-[r:!MENTIONS]->(neighbor)
-              RETURN node.id + ' - ' + type(r) + ' -> ' + neighbor.id AS output
-              UNION ALL
-              WITH node
-              MATCH (node)<-[r:!MENTIONS]-(neighbor)
-              RETURN neighbor.id + ' - ' + type(r) + ' -> ' +  node.id AS output
-            }
-            RETURN output LIMIT 50
-            """,
-            {"query": generate_full_text_query(entity)},
-        )
-        result += "\n".join([el['output'] for el in response])
-    return result
+        return result
 
+    def ensure_fulltext_index(self):
+        # Check and create the full-text index if it does not exist
+        try:
+            indexes = self.graph.query("CALL db.indexes YIELD name RETURN name").values()
+            index_names = [index[0] for index in indexes]
 
+            if 'entity' not in index_names:
+                self.graph.query(
+                    """
+                    CALL db.index.fulltext.createNodeIndex(
+                        'entity',
+                        ['Page', 'Section'],
+                        ['title', 'text']
+                    )
+                    """
+                )
+                print("Full-text index 'entity' created successfully.")
+            else:
+                print("Full-text index 'entity' already exists.")
+        except:
+            print(f"Error ensuring index")
+
+# Helper function to generate a full-text query
 def generate_full_text_query(input: str) -> str:
     full_text_query = ""
     words = [el for el in remove_lucene_chars(input).split() if el]
