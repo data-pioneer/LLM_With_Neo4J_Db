@@ -9,7 +9,9 @@ This project integrates the Neo4j graph database to efficiently manage and store
 
 ## login into Neo4j Db 
 - Create new instance
+- Store required credentials(url,username, password) inside environment variable.
 
+![visualisation](https://github.com/user-attachments/assets/b1c04a5c-7315-4bb4-bfb9-0a7bc419f838)
 
 ## Create Virtual environment 
 conda create -n langhainVenv python=3.10 -y
@@ -40,9 +42,7 @@ pip install -r requirements.txt
 - neo4j_handler.py : This class perform various operation related to Neo4j DB. 
 - rag_chain.py : implementaion of rag pipeline for data retriver.
 
- ![Screenshot 2024-09-04 121938](https://github.com/user-attachments/assets/1d300e6e-ff28-45b3-98ab-9e55baeddf91)
-
-
+![Screenshot 2024-09-21 134501](https://github.com/user-attachments/assets/7984a74a-66f8-4cfc-b5ba-f43b2eee29ec)
 
  
 
