@@ -24,7 +24,8 @@ wiki_handler = WikipediaHandler()
 response_generator = ResponseGenerator()
 
 # Streamlit UI
-st.title("Knowledge Graph with Neo4j and LLM")
+st.title("RAG with Neo4j")
+st.write("Enter wikipedia name for conversation")
 
 # Fetch and process Wikipedia page
 wiki_title = st.text_input("Enter Wikipedia Page Title:")

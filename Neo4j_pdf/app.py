@@ -14,10 +14,9 @@ load_config()
 neo4j_handler = Neo4jHandler(uri=os.environ['NEO4J_URI'], user=os.environ['NEO4J_USERNAME'], password=os.environ['NEO4J_PASSWORD'])
 
 # Streamlit interface
-st.title("Conversational RAG With PDF uploads and chat history")
-st.write("Upload PDFs and chat with their content")
+st.title("RAG with Neo4j and chat history")
+st.write("Select PDF for conversation")
 
-#api_key = st.text_input("Enter your Groq API key:", type="password")
 session_id = "default_session" # st.text_input("Session ID", value="default_session")
 
 
